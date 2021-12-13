@@ -20,11 +20,23 @@ pipeline {
                 withCredentials([aws(accessKeyVariable:'AWS_ACCESS_KEY_ID',credentialsId:'srv-ecr-usr',secretKeyVariable:'AWS_SECRET_ACCESS_KEY')]) {
                
                 sh '''
-                #export PATH="/home/sanjay/.local/bin/aws:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
                 echo $PATH
                 aws --version
-                aws ec2 describe-instances
-                aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 240979667302.dkr.ecr.ap-southeast-2.amazonaws.com 
+                ECR_ACCOUNT_ID=240979667302
+                #aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 240979667302.dkr.ecr.ap-southeast-2.amazonaws.com 
+                ECR_USERNAME=AWS
+                ECR_PASSWORD=$(aws ecr get-login-password --region ap-southeast-2)
+                ECR_AUTHSTR=$(echo -n "$ECR_USERNAME:$ECR_PASSWORD" | base64 -w 0)
+                mkdir -p /var/lib/jenkins/.docker/config.json <<EOF2
+                {
+                    "auths": {
+                            "${AWS_ACCOUNT_ID}.dkr.ecr.ap-southeast-2.amazonaws.com": {
+                                "auth": "${ECR_AUTHSTR}"
+                            }
+                    }
+                }
+                EOF2
+                docker pull 240979667302.dkr.ecr.ap-southeast-2.amazonaws.com/centos:latest
                 '''
                 }    
             }
