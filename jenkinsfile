@@ -23,8 +23,8 @@ pipeline {
                 #export PATH="/home/sanjay/.local/bin/aws:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
                 echo $PATH
                 aws --version
-                #aws ec2 describe-instances
-                #aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 240979667302.dkr.ecr.ap-southeast-2.amazonaws.com 
+                aws ec2 describe-instances
+                aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 240979667302.dkr.ecr.ap-southeast-2.amazonaws.com 
                 '''
                 }    
             }
