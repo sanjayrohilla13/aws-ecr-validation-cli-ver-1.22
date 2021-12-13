@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    environment {
+        AWS_DEFAULT_REGION = 'ap-southeast-2'
+        //TEMP_VAR = credentials('srv-ecr-usr')
+    }
+
+    stages {
+        stage('Download GITHub Repo') {
+            steps {
+                echo 'Downloading..'
+                script {
+                    git credentialsId: 'sanjayrohilla13', branch: 'master', url: 'https://github.com/sanjayrohilla13/aws-ecr-validation-cli-ver-1.22.git', poll: false
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([aws(accessKeyVariable:'AWS_ACCESS_KEY_ID',credentialsId:'srv-ecr-usr',secretKeyVariable:'AWS_SECRET_ACCESS_KEY')]) {
+               
+                sh '''
+                aws --version
+                aws ec2 describe-instances
+                aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 240979667302.dkr.ecr.ap-southeast-2.amazonaws.com 
+                '''
+                }    
+            }
+        }
+    }
+}
