@@ -1,0 +1,1 @@
+# aws-ecr-validation-cli-ver-1.22
