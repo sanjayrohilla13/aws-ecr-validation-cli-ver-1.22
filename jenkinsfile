@@ -37,7 +37,6 @@ pipeline {
                     }
                 }
                 EOF2
-                docker pull 240979667302.dkr.ecr.ap-southeast-2.amazonaws.com/centos:latest
                 '''
                 }    
             }
