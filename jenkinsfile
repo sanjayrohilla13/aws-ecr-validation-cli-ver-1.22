@@ -24,6 +24,7 @@ pipeline {
                 aws --version
                 aws sts get-caller-identity --query Account --output text
                 acc-no=$(aws sts get-caller-identity --output json |grep Account |awk -F ': "' '{print$2}' |sed 's/\".*//')
+                echo $acc-no
                 $(aws ecr get-login --region "ap-southeast-2" --no-include-email)
                 '''
                 }    
