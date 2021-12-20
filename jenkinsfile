@@ -22,21 +22,8 @@ pipeline {
                 sh '''
                 echo $PATH
                 aws --version
-                ECR_ACCOUNT_ID=240979667302
-                #aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 240979667302.dkr.ecr.ap-southeast-2.amazonaws.com 
-                ECR_USERNAME=AWS
-                ECR_PASSWORD=$(aws ecr get-login-password --region ap-southeast-2)
-                ECR_AUTHSTR=$(echo -n "$ECR_USERNAME:$ECR_PASSWORD" | base64 -w 0)
-                mkdir -p /var/lib/jenkins/.docker
-                cat >/var/lib/jenkins/.docker/config.json <<EOF2
-                {
-                    "auths": {
-                            "${AWS_ACCOUNT_ID}.dkr.ecr.ap-southeast-2.amazonaws.com": {
-                                "auth": "${ECR_AUTHSTR}"
-                            }
-                    }
-                }
-                EOF2
+                aws sts get-caller-identity
+                $(aws ecr get-login --region "ap-southeast-2" --no-include-email)
                 '''
                 }    
             }
